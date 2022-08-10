@@ -38,10 +38,13 @@
  * 
  */
 
-//Biblioteca del sensor
+//Bibliotecas
 #include "DHT.h"
+#include <FastLED.h>
 
 //Constantes
+#define NUM_STRIPS 8 //Numero de paneles
+#define NUM_LEDS_PER_STRIP 64 //Numero de leds por panel
 #define DHTPIN D8//Pin donde se lee el sensor
 const int SENSOR_READ = 1000;//Determina el tiempo de lectura del sensor a 1 segundo
 const int LECTURE_THRESHOLD = 10; //Detecta un 10% de cambio en la humedad
@@ -71,6 +74,9 @@ int humidity [16];//Arreglo de anillo
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
 
+//Objeto que define el manejo de leds
+CRGB leds[NUM_STRIPS][NUM_LEDS_PER_STRIP];
+
 //Inicialización del programa, se ejecuta una sola vez al energizar o resetear
 void setup() {
   //De momento no necesitamos comunicación serial, pero puede activarse para el debugging
@@ -79,6 +85,19 @@ void setup() {
 
   //Objeto que inicia la comunicación con el sensor
   dht.begin();
+
+  //Definición de leds
+  FastLED.addLeds<NEOPIXEL, D0>(leds[0], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D1>(leds[1], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D2>(leds[2], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D3>(leds[3], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D4>(leds[4], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D5>(leds[5], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D6>(leds[6], NUM_LEDS_PER_STRIP);
+  FastLED.addLeds<NEOPIXEL, D7>(leds[7], NUM_LEDS_PER_STRIP);
+
+  //Apagar todos los leds
+  allBlack ();
 
   //Inicia secuencia de control de tiempos no bloqueante
   timeLast = millis (); //Esta función obtiene la hora del micro controlador
@@ -152,6 +171,24 @@ void loop() {
 }
 
 //Funciones de usuario
+
+//Apagar todo
+void allBlack () {
+  // This outer loop will go over each strip, one at a time
+  for(int x = 0; x < NUM_STRIPS; x++) {
+    // This inner loop will go over each led in the current strip, one at a time
+    for(int i = 0; i < NUM_LEDS_PER_STRIP; i++) {
+      leds[x][i] = CRGB::Black;
+    }
+  }
+  FastLED.show();
+  delay(10);
+}
+
+//Esta función calcula el rango de variación
+void rango (int dispersion) {
+  
+}
 
 void doTheEvolutionBaby () {
   //Codigo de cambio generacional

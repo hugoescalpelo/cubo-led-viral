@@ -5,7 +5,7 @@
 
 #include <FastLED.h>
 
-#define NUM_STRIPS 8
+#define NUM_STRIPS 1
 #define NUM_LEDS_PER_STRIP 64
 CRGB leds[NUM_STRIPS][NUM_LEDS_PER_STRIP];
 
